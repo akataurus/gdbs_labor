@@ -32,14 +32,15 @@ class Shell {
 			// Replace the file path with path of the directory
 
 			File directory = new File(inputList.get(0));
-			findFile(directory);
+			findFile(directory, inputList.get(1));
 
 			System.out.println("inputList: " + inputList);
 		}
 	}
 
 
-	public static void findFile(File directory) {
+
+	public static void findFile(File directory, String file){
 		// store all names with same name
 		// with/without extension
 		String[] flist = directory.list();
@@ -52,7 +53,7 @@ class Shell {
 			// Linear search in the array
 			for (int i = 0; i < flist.length; i++) {
 				String filename = flist[i];
-				if (filename.equalsIgnoreCase("file.cpp")) {
+				if (filename.equalsIgnoreCase(file)) {
 					System.out.println(filename + " found");
 					flag = 1;
 				}
