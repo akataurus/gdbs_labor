@@ -32,8 +32,9 @@ class Shell {
 			// Replace the file path with path of the directory
 
 			File directory = new File(inputList.get(0));
-			findFile(directory, inputList.get(1));
-
+			if(inputList.size() > 1) {
+				findFile(directory, inputList.get(1));
+			}
 			System.out.println("inputList: " + inputList);
 		}
 	}
