@@ -1,73 +1,49 @@
-import java.io.File;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
+import static cTools.KernelWrapper.*;
 
-class Shell {
+class hello {
+  
+  public static void main(String[] args) {
 
-	public static void main(String[] args) {
+    String prompt = "enter stuff>>> ";
 
+    //create scanner object
+    Scanner scIn = new Scanner(System.in);
+    while(true){
+      System.out.print(prompt);
 
-		Scanner myObj = new Scanner(System.in); //create scanner object
-		System.out.print("Enter a file name>>>>> ");
-		while(myObj.hasNext()) {
-			String userInput = myObj.nextLine(); // read user input
-			if(userInput.equals("exit")){
-				myObj.close();
-			}
-			String[] inputParts = userInput.split(" ");
+      // read user input
+      String userInput = scIn.nextLine();
 
-			//create list of input words
-			ArrayList<String> inputList = new ArrayList<String>();
+      if(userInput.equals("exit")){
+        exit(0);
+      }
 
+      //split the input in seperate words
+      String[] inputParts = userInput.split(" ");
+      String command = inputParts[0];
+      String[] params = inputParts;
 
-			//Output user input seperated
-			for (int i = 0; i < inputParts.length; i++) {
+      //split in two processes
+      int pid = fork();
+      int[] status = new int[1];
 
-				inputList.add(inputParts[i]); //add elements to list
-
-			}
-
-			// Create an object of the File class
-			// Replace the file path with path of the directory
-
-			File directory = new File(inputList.get(0));
-			if(inputList.size() > 1) {
-				findFile(directory, inputList.get(1));
-			}
-			System.out.println("inputList: " + inputList);
-		}
-	}
-
-
-
-	public static void findFile(File directory, String file){
-		// store all names with same name
-		// with/without extension
-		String[] flist = directory.list();
-		System.out.println(flist);
-		int flag = 0;
-		if (flist == null) {
-			System.out.println("Empty directory.");
-		} else {
-
-			// Linear search in the array
-			for (int i = 0; i < flist.length; i++) {
-				String filename = flist[i];
-				if (filename.equalsIgnoreCase(file)) {
-					System.out.println(filename + " found");
-					flag = 1;
-				}
-			}
-		}
-
-		if (flag == 0) {
-			System.out.println("File Not Found");
-		}
-
-	}
-
-	public static void write(){
-
-	}
+      //child
+      if(pid == 0){
+        execv("/bin/" + command, params);
+        exit(-1);
+      }
+      //parentprocess
+      else if(pid > 0){
+        waitpid(pid, status, 0);
+      }
+      //error
+      else{
+        System.out.println("smth went wrong");
+        exit(-1);
+      }
+    }
+  }
 }
