@@ -18,7 +18,7 @@ class hello {
       String userInput = scIn.nextLine();
 
       if(userInput.equals("exit")){
-        exit(0);
+        break;
       }
 
       //split the input in seperate words
